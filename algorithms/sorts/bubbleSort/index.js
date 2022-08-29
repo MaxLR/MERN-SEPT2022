@@ -25,3 +25,18 @@ const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
  * @returns {Array<number>} The given nums after being sorted.
  */
 function bubbleSort(nums = []) {}
+
+
+
+/**
+ * PSEUDO CODE:
+ *  1: create function that takes in an array
+ *  2: create a temp var isSorted (or something) & set to false
+ *  3: create a while loop while !isSorted
+ *      a: set isSorted to true
+ *      b: for loop through our input array (excluding last index)
+ *          - check if current value > the one next to it
+ *              --if current val >, swap the two values & set isSorted to false
+ *          - continue on to next loop in for loop
+ *  4: return our array
+ */
