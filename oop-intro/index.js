@@ -43,6 +43,7 @@ class Lecture {
         const fullNames = []
         
         for (let i = 0; i < this.roster.length; i++) {
+            //using const b/c if we use var it will hoist the student variable to the createAttendanceList method
             const student = this.roster[i]
             fullNames.push(student.fullName())
         }
