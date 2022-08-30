@@ -60,6 +60,55 @@ function renderUsers(users = [], parentNode) {
     parentNode.appendChild(usersRow)
 }
 
+// a baseUrl helps to avoid repeating the beginning part of the url for
+// multiple endpoints
+// endpoint: the final pieces of the url that direct you to a resource
+const apiBaseUrl = 'https://jsonplaceholder.typicode.com'
+
+async function fetchUser(userId) {
+    const url = `${apiBaseUrl}/users/${userId}`
+
+    try {
+        const response = await fetch(url)
+        const user = await response.json()
+        return user
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function fetchUsers(userIds = []) {
+    // this variable contains promises that have not been awaited, we can't access
+    // the data until we await or use the .then
+    const userFetchPromises = userIds.map((id) => fetchUser(id))
+
+    const settledUserPromises = await Promise.allSettled(userFetchPromises)
+    console.log(settledUserPromises)
+    
+    return settledUserPromises
+}
+
+
+// testing our fetchUser async function
+async function main() {
+
+
+    //testing our fetch users function
+    const settledUsers = await fetchUsers([2, 4, 6])
+    const usersFormatted = settledUsers
+        //filtering out any responses that were rejected
+        .filter(res => res.status === "fulfilled")
+        //extract just the user data
+        .map(res => res.value)
+    renderUsers(usersFormatted, document.getElementById("myDiv"))
+
+    // const testUser = await fetchUser(2)
+    // renderUsers([testUser], document.getElementById("myDiv"))
+}
+
+main()
+
+// we'll be rendering users 2, 4, & 6
 
 // quick display of our new userNode
 // const myNode = makeUserNode(mockUsers[0])
