@@ -40,3 +40,32 @@ function bubbleSort(nums = []) {}
  *          - continue on to next loop in for loop
  *  4: return our array
  */
+
+
+/**
+ * Sorts the given nums in-place by mutating the array.
+ * Best: O(n) linear when array is already sorted.
+ * Average: O(n^2) quadratic.
+ * Worst: O(n^2) quadratic when the array is reverse sorted.
+ * @param {Array<number>} nums
+ * @returns {Array<number>} The given nums after being sorted.
+ */
+ function bubbleSort(nums = []) {
+  let isSorted = false;
+
+  while (isSorted === false) {
+    isSorted = true;
+
+    for (let i = 0; i < nums.length - 1; i++) {
+      const j = i + 1;
+
+      if (nums[i] > nums[j]) {
+        isSorted = false;
+        const temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+      }
+    }
+  }
+  return nums;
+}
