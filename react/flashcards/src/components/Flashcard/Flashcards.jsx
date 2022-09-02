@@ -1,13 +1,29 @@
 import { useState } from "react";
-
 import flashcardsData from '../../data/flashcards'
 import { Flashcard } from "./Flashcard";
+import { useEffect } from 'react';
+import { getQuestions } from "../../services/triviaApiService";
 
 export const Flashcards = (props) => {
-    const [flashcards, setFlashcards] = useState(flashcardsData)
-    const [category, setCategory] = useState("")
-    const [front, setFront] = useState("")
-    const [back, setBack] = useState("")
+    const { queryParams } = props
+  // this runs any time the component re-renders
+  const [flashcards, setFlashcards] = useState([])
+  const [category, setCategory] = useState("")
+  const [question, setQuestion] = useState("")
+  const [correct_answer, setCorrect_answer] = useState("")
+  
+    useEffect(() => {
+        getQuestions(queryParams)
+        .then(questions => {
+            console.log("api request made")
+            setFlashcards(questions.results)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }, []) // 2nd parameter (array) is our dependency array for useEffect
+    // dependency array allows you to re-run useEffect whenever a variable
+    // (e.g. prop/state vars) change
 
     const handleNewCardSubmit = (e) => {
         e.preventDefault()
@@ -16,14 +32,14 @@ export const Flashcards = (props) => {
         // long form key: value syntax
         category: category,
         // shorthand syntax when key & var name match
-        front,
-        back
+        question,
+        correct_answer
         }
 
         setFlashcards([newCard, ...flashcards])
         setCategory("")
-        setFront("")
-        setBack("")
+        setQuestion("")
+        setCorrect_answer("")
     }
 
     const handleFlipCardClick = (event, selectedIdx) => {
@@ -74,7 +90,7 @@ export const Flashcards = (props) => {
                     <input
                         /*
                         We cannot use onChange={setCategory} because then the whole event will be
-                        passed in. So we have to create the callback below so we can control what
+                        passed in. So we have to create the callcorrect_answer below so we can control what
                         is passed in to setCategory.
                         */
                         onChange={(e) => {
@@ -86,40 +102,45 @@ export const Flashcards = (props) => {
                 </div>
 
                 <div>
-                    <label>Front: </label>
+                    <label>question: </label>
                     <input
                         onChange={(e) => {
-                            setFront(e.target.value);
+                            setQuestion(e.target.value);
                         }}
                         type="text"
-                        value={front}
+                        value={question}
                     />
                 </div>
 
                 <div>
-                    <label>Back: </label>
+                    <label>correct_answer: </label>
                     <input
                         onChange={(e) => {
-                            setBack(e.target.value);
+                            setCorrect_answer(e.target.value);
                         }}
                         type="text"
-                        value={back}
+                        value={correct_answer}
                     />
                 </div>
                 <button>Add</button>
             </form>
             <hr />
             <main className="flex-row flex-wrap">
-                {flashcards.map((card, i) => {
-                    return (
-                        <Flashcard
-                            card={card}
-                            idx={i}
-                            handleDelete={handleDelete}
-                            handleFlipCardClick={handleFlipCardClick}
-                        />
-                    );
-                })}
+                {flashcards.length === 0 ? (
+                    <h3>Loading.....</h3>
+                ) : (
+                    flashcards.map((card, i) => {
+                        return (
+                            <Flashcard
+                                card={card}
+                                key={i}
+                                idx={i}
+                                handleDelete={handleDelete}
+                                handleFlipCardClick={handleFlipCardClick}
+                            />
+                        );
+                    })
+                )}
             </main>
         </div>
     )

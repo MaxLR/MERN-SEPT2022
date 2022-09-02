@@ -1,6 +1,6 @@
 export const Flashcard = (props) => {
     const { card, handleDelete, handleFlipCardClick, idx } = props
-    const { category, back, front, flipped } = card
+    const { category, question, correct_answer, flipped } = card
 
     return(
         <section
@@ -19,9 +19,9 @@ export const Flashcard = (props) => {
               condition ? 'return this if true' : 'return this if false'
               */}
               {flipped ? (
-                <p >{back}</p>
+                <p >{correct_answer}</p>
               ) : (
-                <p>{front}</p>
+                <p>{question}</p>
               )}
               <button
                 onClick={(e) => {
