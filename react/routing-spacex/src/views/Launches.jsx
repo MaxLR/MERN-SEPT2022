@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { Link } from 'react-router-dom'
+import { getAllLaunches } from '../services/spacexApiService';
 
 export const Launches = (props) => {
     const [launches, setLaunches] = useState([])
@@ -11,10 +12,12 @@ export const Launches = (props) => {
     useEffect(() => {
         setIsLoading(true)
 
-        axios
-            .get(`https://api.spacexdata.com/v5/launches`)
-            .then((res) => {
-                setLaunches(res.data)
+        getAllLaunches()
+            .then((data) => {
+                const launchesWithImages = data.filter((launch) => {
+                    return launch.links.flickr.original.length > 0;
+                })
+                setLaunches(launchesWithImages)
             })
             .catch((err) => {
                 console.log(err)

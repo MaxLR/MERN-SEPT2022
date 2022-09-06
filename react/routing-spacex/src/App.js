@@ -20,6 +20,14 @@ function App() {
       <Routes>
         {/* to be able to use the index prop, you can't define the path */}
         <Route index element={<Launches />} />
+        <Route path="/launches" element={<Launches />} />
+        
+        {/* code below will create two routes ("/" and "/launches") that display the same view */}
+        {/* {
+          ['/', '/launches'].map((path, i) => {
+            return <Route key={i} path={path} element={<Launches />} />
+          })
+        } */}
 
         <Route path="/launches/:id" element={<OneLaunch />} />
 
