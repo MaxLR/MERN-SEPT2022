@@ -18,9 +18,9 @@ const setB2 = [4, 5, 6];
 const expected2 = [1, 2, 3, 4, 5, 6];
 // Explanation: neither array has shared values, so all are included
 
-const setA3 = [4, 1, 2, 3, 4];
-const setB3 = [1, 2, 3, 5, 5];
-const expected3 = [4, 5];
+const setA3 = [5, 1, 2, 3, 5];
+const setB3 = [1, 2, 3, 4, 4];
+const expected3 = [5, 4];
 /* 
   Explanation: 1, 2, and 3 are shared so are excluded
     4 and 5 are included because they exist only in 1 array, but have duplicates, so only one copy of each is kept
