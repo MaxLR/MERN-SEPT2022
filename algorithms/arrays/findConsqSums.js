@@ -11,6 +11,10 @@ const expected1 = [
   [2, 5, 3, 6],
   [3, 6, 7],
 ];
+const sum6 = 35;
+const expected6 = [
+    [23, 12]
+]
 
 const nums2 = [];
 const sum2 = 5;
