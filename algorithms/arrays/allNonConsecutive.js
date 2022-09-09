@@ -17,10 +17,13 @@ const expected2 = [];
 
 const nums3 = [1, 3, 7, 9];
 const expected3 = [
-  { i: 1, n: 3 },
-  { i: 2, n: 7 },
-  { i: 3, n: 9 },
+    { i: 1, n: 3 },
+    { i: 2, n: 7 },
+    { i: 3, n: 9 },
 ];
+
+const nums4 = [1];
+const expected4 = [];
 // Explanation: Index 0 has no number before it, so it is not included.
 
 /**
