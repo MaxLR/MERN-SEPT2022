@@ -31,9 +31,3 @@ const expected2 =
  *    columns and values are extracted from columnValuePairs.
  */
 function insert(tableName, columnValuePairs) {}
-
-/**
- * - Time: O(?).
- * - Space: O(?).
- */
-function insertFunctional(tableName, columnValuePairs) {}
