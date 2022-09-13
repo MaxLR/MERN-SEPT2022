@@ -45,7 +45,7 @@ const updateData2 = {
     lateCount: 16,
     randomKey: "randomValue",
 };
-  const expected2 = {
+const expected2 = {
     id: 1,
     name: "student1",
     isLateToday: true,
