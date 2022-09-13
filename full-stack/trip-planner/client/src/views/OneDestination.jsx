@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { getDestinationById } from '../services/internalApiService';
+import { 
+  getDestinationById,
+  deleteDestinationById
+} from '../services/internalApiService';
 
 export const OneDestination = (props) => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  
   const [destination, setDestination] = useState(null);
 
   useEffect(() => {
@@ -15,11 +20,24 @@ export const OneDestination = (props) => {
       .catch(err => {
         console.log(err)
       })
-  })
+  }, [id])
+
+  const handleDelete = () => {
+    deleteDestinationById(id)
+      .then(data => {
+        // There's no reason to stay on the page after the one item being viewed
+        // has been deleted.
+        navigate("/destinations")
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   if (destination === null) {
     return <h3>No Destination</h3>
   }
+
 
   // We can only safely use the data to render and destructure now since
   // we checked it's not null.
@@ -28,6 +46,11 @@ export const OneDestination = (props) => {
   return (
     <div className="w-100 mx-auto shadow mb-4 rounded border p-4">
       <h4>{location}</h4>
+      <button
+        onClick={handleDelete}
+      >
+        Delete
+      </button>
       <p>{description}</p>
       <h5>Travel Seasons:</h5>
       <ul className="list-group mb-4">

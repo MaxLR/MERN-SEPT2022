@@ -75,6 +75,12 @@ export const NewDestination = (props) => {
     
             <div className="form-group">
               <label className="h6">Description</label>
+              {
+                //adding error messaging specifically for description
+                errors?.description && (
+                  <span style={{ color: 'red' }}>{errors.description?.message}</span>
+                )
+              }
               <textarea
                 onChange={(event) => {
                   setDescription(event.target.value);
