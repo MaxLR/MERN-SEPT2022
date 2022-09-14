@@ -72,7 +72,7 @@ const searchFor4 = "E";
 const searchBy4 = "lastName";
 const searchMethod4 = "includes";
 const expected4 = [
-{
+    {
       firstName: "John",
       lastName: "Doe",
     },
