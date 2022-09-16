@@ -114,6 +114,17 @@ const expected2 = {
     variants: [{ name: "skateboard", price: 42 }],
 };
 
+function shopifyProductFactory(datoEntity) {
+    const { title, sku } = datoEntity.attributes
+
+    return {
+        id: null,
+        title,
+        sku,
+        variants: []
+    }
+}
+
 /**
  * Splits variants from a new product added to Dato into new duplicate shopify
  * products based on how many are needed to fit all the variants.
@@ -123,4 +134,29 @@ const expected2 = {
  * @param {number} variantLimit The max number of variants that the shopify
  *    api will allow.
  */
-function splitVariantsIntoNewProducts(datoEntity, variantLimit = 2) {}
+function splitVariantsIntoNewProducts(datoEntity, variantLimit = 2) {
+    const newProducts = []
+    const allVariants = datoEntity.attributes.variants
+    let tempProduct = shopifyProductFactory(datoEntity)
+    for (let currentVariant of allVariants) {
+        const { name, price } = currentVariant.attributes
+        let newVariant = { name: name, price: price }
+        tempProduct.variants.push(newVariant)
+        
+        if (tempProduct.variants.length >= variantLimit) {
+            newProducts.push(tempProduct)
+            tempProduct = shopifyProductFactory(datoEntity)
+        }
+    }
+
+    if (tempProduct.variants.length > 0) {
+        newProducts.push(tempProduct)
+    }
+
+    return newProducts
+}
+
+const temp = splitVariantsIntoNewProducts(datoEntity1)
+
+console.log(temp[0].variants)
+console.log(temp)

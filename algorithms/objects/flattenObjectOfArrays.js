@@ -30,7 +30,7 @@ const object1 = {
     ],
     returnPickupOrders: [],
 };
-  
+
 const expected1 = [
     { id: 112, type: "pickup" },
     { id: 117, type: "pickup" },
