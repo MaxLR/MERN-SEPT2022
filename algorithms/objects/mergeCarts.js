@@ -142,12 +142,97 @@ so they are fresh copies of the products and not references.
 */
 
 /**
- * Creates a new array of products containing all the shoppingCart items and
- * any wishList item that wasn't already in the shoppingCart.
- * - Time: O(?).
- * - Space: O(?).
+ * - Time: O(n + (m * n)). n = `shoppingCart.length`, m = `wishList.length`.
+ *    Worst case is neither list is smaller (same size)
+ *    which would result in O(n + n^2) -> O(2n^2) -> O(n^2) quadratic.
+ *    Since we don't know if they will be the same size, we differentiate
+ *    `n` and `m`
+ * - Space: O(n + m) -> O(n) linear.
  * @param {Product[]} shoppingCart
  * @param {Product[]} wishList
  * @returns {Product[]} A new merged array that is deduped.
  */
-function mergeCarts(shoppingCart, wishList) {}
+ function mergeCarts(shoppingCart = [], wishList = []) {
+    // Initialize new array with all shopping cart items in it.
+    const mergedCart = [...shoppingCart];
+  
+    for (const wishProduct of wishList) {
+      let isDuplicate = false;
+  
+      // Loop over shoppingCart instead of mergedCart because they start as the
+      // same items and we don't need to loop over the new items pushed
+      // into mergedCart.
+      for (const existingProduct of shoppingCart) {
+        if (existingProduct.id === wishProduct.id) {
+          isDuplicate = true;
+          // We found what we were looking for, go to next wishProduct.
+          break;
+        }
+      }
+  
+      if (isDuplicate === false) {
+        mergedCart.push(wishProduct);
+      }
+    }
+  
+    return mergedCart;
+  }
+  
+  /**
+   * - Time: O(n + m) -> O(n) linear.
+   * - Space: O(n + m) -> O(n) linear.
+   * @param {Product[]} shoppingCart
+   * @param {Product[]} wishList
+   * @returns {Product[]} A new merged array that is deduped.
+   */
+  function mergeCartsWithHashTable(shoppingCart, wishList) {
+    const mergedCart = [];
+    // A Map instance could also be used instead of an object.
+    const productsTable = {};
+  
+    // O(n)
+    for (const cartProduct of shoppingCart) {
+      if (productsTable.hasOwnProperty(cartProduct.id) === false) {
+        mergedCart.push(cartProduct);
+        productsTable[cartProduct.id] = cartProduct;
+      }
+    }
+  
+    // O(m)
+    for (const wishProduct of wishList) {
+      if (productsTable.hasOwnProperty(wishProduct.id) === false) {
+        mergedCart.push(wishProduct);
+        productsTable[wishProduct.id] = wishProduct;
+      }
+    }
+    return mergedCart;
+  }
+
+/**
+ * - Time: O(n) linear.
+ *    n = shoppingCart.length, m = wishList.length.
+ *    n + m to merge the lists, n + m again to .reduce merged list, n + m
+ *    again to convert the Map into a list: O(3(n + m)), drop the constant
+ *    3 and n + m is still considered O(n).
+ * - Space: O(n + m) -> O(n) linear.
+ * @param {Product[]} shoppingCart
+ * @param {Product[]} wishList
+ * @returns {Product[]} A new merged array that is deduped.
+ */
+const mergeCartsWithMap = (shoppingCart = [], wishList = []) => [
+    // Spread the deduped products from hashMap.values() into an array
+    ...[
+      // Merge both lists into one, which will have dupes
+      ...shoppingCart,
+      ...wishList,
+    ]
+      // reduce merged list to a hashMap to dedupe by id. Object can also be used
+      // but Maps preserve order and usually perform better.
+      .reduce((hashMap, product) => {
+        // Dupes will overwrite but it doesn't matter since it's the same data
+        hashMap.set(product.id, product);
+        return hashMap;
+      }, new Map())
+      // get the product's from the hashMap to convert into an array.
+      .values(),
+];

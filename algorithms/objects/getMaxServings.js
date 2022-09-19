@@ -50,13 +50,46 @@ const expected3 = 0; // broccoli seeds key doesn't exist in available ingredient
 
 /**
  * Determines how many servings can be made of the given recipe.
- * - Time: O(?).
- * - Space: O(?).
- * @typedef {string} IngredientName
- * @typedef {number} Quantity
- * @typedef {Object<IngredientName, Quantity>} Ingredients
+ * - Time: O(n) linear, n = recipe number of keys.
+ * - Space: O(1) constant.
+ * @typedef {Object<string, number>} Ingredients Key value pairs are ingredient
+ *    name and a quantity.
  * @param {Ingredients} recipe
  * @param {Ingredients} available
  * @returns {number} Max servings of the recipe that can be made.
  */
-function getMaxServings(recipe, available) {}
+ function getMaxServings(recipe, available) {
+  let limitingAmount = Infinity;
+
+  for (const reqIngred in recipe) {
+    const availableAmnt = available[reqIngred];
+    const reqAmnt = recipe[reqIngred];
+
+    if (!available.hasOwnProperty(reqIngred) || availableAmnt < reqAmnt) {
+      // missing ingredient, can't make any
+      return 0;
+    }
+
+    // how many servings can be made based on this 1 ingredient
+    let servingsPerIngred = availableAmnt / reqAmnt;
+
+    if (servingsPerIngred < limitingAmount) {
+      limitingAmount = servingsPerIngred;
+    }
+  }
+  return Math.floor(limitingAmount);
+}
+
+/**
+ * - Time: O(4n) -> O(n) linear.
+ *    4n comes from counting .entries, .map, spread operator, and .min which
+ *    are all loops.
+ * Space: O(2n) from .entries and .map array -> O(n) linear.
+ */
+const functionalGetMaxServings = (recipe, available) =>
+  Math.min(
+    ...Object.entries(recipe).map(
+      ([requiredIngred, requiredAmnt]) =>
+        available[requiredIngred] / requiredAmnt
+    )
+  ) || 0;
